@@ -1,7 +1,7 @@
 # Pinned developer toolchain. `mise install` (or `just setup`) installs everything below.
 # Keep `rust` in sync with rust-toolchain.toml.
 [tools]
-rust = "1.99.1"
+rust = { version = "1.99.1", components = "rustfmt,clippy", profile = "minimal" }
 flutter = "3.47.8"
 just = "1.59.0"
 lefthook = "2.2.2"
