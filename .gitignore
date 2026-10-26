@@ -1,0 +1,25 @@
+# Rust
+/target/
+
+# Dart / Flutter
+.dart_tool/
+build/
+.flutter-plugins-dependencies
+*.iml
+.idea/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Documentation build
+/site/
+
+# Demo media (downloaded by the demo script, never committed)
+/demo/media/
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.vscode/

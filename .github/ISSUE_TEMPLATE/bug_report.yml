@@ -1,0 +1,40 @@
+name: Bug report
+description: Something does not work as expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start the TV app
+        2. Open Movies
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options: [Core, TV app, Remote, Extension, Documentation, Build / CI]
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS and version, device, commit or release.
+      placeholder: macOS 26.1, commit abc1234
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant log output, without secrets.
+      render: text

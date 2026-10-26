@@ -1,0 +1,11 @@
+name: teloche_protocol
+description: Dart side of the control API contract defined in crates/protocol.
+publish_to: none
+version: 0.0.1
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dev_dependencies:
+  test: ^1.25.6

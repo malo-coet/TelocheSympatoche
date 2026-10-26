@@ -1,0 +1,27 @@
+name: Feature
+description: A user-facing capability to add or improve.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: Who needs this, and why.
+      placeholder: As a viewer, I want to ... so that ...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Observable conditions for this to be done, including accessibility.
+      placeholder: |
+        - [ ] ...
+        - [ ] Usable with the arrow keys, Enter and Back only
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Design ideas, links, open questions.

@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contract",
+  "description": "Every type of the contract, gathered so a single JSON Schema documents them all.",
+  "type": "object",
+  "properties": {
+    "health": {
+      "$ref": "#/$defs/Health"
+    },
+    "ping_result": {
+      "$ref": "#/$defs/PingResult"
+    },
+    "request": {
+      "$ref": "#/$defs/Request"
+    },
+    "response": {
+      "$ref": "#/$defs/Response"
+    }
+  },
+  "required": [
+    "request",
+    "response",
+    "health",
+    "ping_result"
+  ],
+  "$defs": {
+    "ErrorObject": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "data": true,
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "Health": {
+      "description": "Body of `GET /health`.",
+      "type": "object",
+      "properties": {
+        "server_version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "server_version"
+      ]
+    },
+    "PingResult": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "type": "string"
+        },
+        "server_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "server_version",
+        "api_version"
+      ]
+    },
+    "Request": {
+      "description": "A call from a client. Without `id` it is a notification and gets no response.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RequestId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "jsonrpc": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "params": true
+      },
+      "required": [
+        "jsonrpc",
+        "method"
+      ]
+    },
+    "RequestId": {
+      "description": "Identifier chosen by the client to match a response to its request.",
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "Response": {
+      "description": "The answer to a request: either a result or an error.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "`None` only when the request id could not be read (parse error).",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RequestId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "jsonrpc": {
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "result": true
+          },
+          "required": [
+            "result"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/ErrorObject"
+            }
+          },
+          "required": [
+            "error"
+          ]
+        }
+      ],
+      "required": [
+        "jsonrpc"
+      ]
+    }
+  }
+}

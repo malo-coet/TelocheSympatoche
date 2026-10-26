@@ -1,0 +1,17 @@
+[package]
+name = "teloche-protocol"
+description = "Wire contract between the core and its clients. Single source of truth for the generated schema."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+schemars.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

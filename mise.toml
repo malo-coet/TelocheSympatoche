@@ -1,0 +1,14 @@
+# Pinned developer toolchain. `mise install` (or `just setup`) installs everything below.
+# Keep `rust` in sync with rust-toolchain.toml.
+[tools]
+rust = "1.99.1"
+flutter = "3.47.8"
+just = "1.59.0"
+lefthook = "2.2.2"
+cargo-deny = "0.20.2"
+gitleaks = "8.30.1"
+uv = "0.13.5"
+"github:nextest-rs/nextest" = { version = "0.9.149", version_prefix = "cargo-nextest-" }
+
+[settings]
+experimental = true

@@ -1,0 +1,17 @@
+# Dart/Flutter workspace: one `flutter pub get` at the root resolves every
+# package below into a single pubspec.lock.
+name: teloche_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+workspace:
+  - apps/tv
+  - apps/remote
+  - packages/client
+  - packages/design_system
+  - packages/protocol
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

@@ -1,0 +1,23 @@
+# Git hooks, installed by `just setup` (`lefthook install`).
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: rustfmt
+      glob: "*.rs"
+      run: cargo fmt --all --check
+    - name: dart format
+      glob: "*.dart"
+      run: dart format --output=none --set-exit-if-changed {staged_files}
+    - name: gitleaks
+      run: gitleaks git --staged --no-banner --redact
+
+commit-msg:
+  jobs:
+    - name: conventional commit
+      run: |
+        head -n1 {1} | grep -Eq '^((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: .+|Merge .+|Revert .+)' || {
+          echo "Commit messages follow Conventional Commits, e.g. 'feat(library): add incremental scan'."
+          echo "See CONTRIBUTING.md."
+          exit 1
+        }

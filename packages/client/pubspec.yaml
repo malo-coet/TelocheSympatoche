@@ -1,0 +1,16 @@
+name: teloche_client
+description: WebSocket JSON-RPC client for the control API, used by the TV app, the remote and tests.
+publish_to: none
+version: 0.0.1
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  stream_channel: ^2.1.4
+  teloche_protocol: any
+  web_socket_channel: ^3.0.3
+
+dev_dependencies:
+  test: ^1.25.6

@@ -1,0 +1,17 @@
+# Local SMB share for developing and demonstrating network sources.
+# Start it with `just samba`, then add the source smb://127.0.0.1:1445/Media
+# with the demo-only credentials below. Port 1445 avoids clashing with the
+# host's own file sharing on 445.
+services:
+  samba:
+    image: dockurr/samba:4.23.10
+    restart: unless-stopped
+    ports:
+      - "1445:445"
+    environment:
+      NAME: Media
+      USER: teloche
+      PASS: teloche-demo
+      RW: "false"
+    volumes:
+      - ../../demo/media:/storage:ro

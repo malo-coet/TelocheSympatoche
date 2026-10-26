@@ -1,0 +1,21 @@
+name: CD
+
+# Every merge on main produces installable builds for every platform,
+# available as workflow artifacts.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cd-main
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      all-platforms: true
+      upload: true

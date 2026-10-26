@@ -1,0 +1,5 @@
+# Reviewers requested automatically on pull requests.
+# Add each team member as owner of their area, e.g.:
+#   /crates/library/  @core-owner
+#   /apps/            @experience-owner
+*  @malo-coet

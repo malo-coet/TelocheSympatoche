@@ -1,0 +1,135 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  merge_group:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      rust: ${{ steps.filter.outputs.rust }}
+      flutter: ${{ steps.filter.outputs.flutter }}
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            shared: &shared
+              - .github/workflows/**
+              - mise.toml
+              - justfile
+            rust:
+              - *shared
+              - crates/**
+              - xtask/**
+              - Cargo.toml
+              - Cargo.lock
+              - rust-toolchain.toml
+              - deny.toml
+              - packages/protocol/schema/**
+            flutter:
+              - *shared
+              - apps/**
+              - packages/**
+              - pubspec.yaml
+              - pubspec.lock
+              - analysis_options.yaml
+            docs:
+              - *shared
+              - docs/**
+              - mkdocs.yml
+
+  rust:
+    name: Rust (lint, test, supply chain)
+    needs: changes
+    if: needs.changes.outputs.rust == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: rust just cargo-deny github:nextest-rs/nextest
+      - uses: Swatinem/rust-cache@v2
+      - run: just lint-rust
+      - run: just test-rust
+      - run: just deny
+      - name: Protocol schema is up to date
+        run: cargo xtask codegen --check
+
+  flutter:
+    name: Flutter (lint, test)
+    needs: changes
+    if: needs.changes.outputs.flutter == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: flutter just
+      - run: flutter pub get --enforce-lockfile
+      - run: just lint-flutter
+      - run: just test-flutter
+
+  docs:
+    name: Documentation
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: uv just
+      - run: just docs-build
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: jdx/mise-action@v5
+        with:
+          install_args: gitleaks just
+      - run: just secrets
+
+  build:
+    name: Build
+    needs: changes
+    if: github.event_name != 'push' && (needs.changes.outputs.rust == 'true' || needs.changes.outputs.flutter == 'true')
+    uses: ./.github/workflows/build.yml
+    with:
+      all-platforms: false
+
+  # Single required check for branch protection: path-filtered jobs that are
+  # skipped do not block, failed or cancelled ones do.
+  ci-ok:
+    name: CI OK
+    if: always()
+    needs: [changes, rust, flutter, docs, secrets, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every job passed or was skipped
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
+      - run: echo "All checks passed."

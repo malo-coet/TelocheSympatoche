@@ -1,0 +1,52 @@
+site_name: TelocheSympatoche
+site_description: A living-room media center, extensible and driven from your phone.
+repo_url: https://github.com/malo-coet/TelocheSympatoche
+repo_name: malo-coet/TelocheSympatoche
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+  palette:
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - User guide: user/index.md
+  - Developer guide:
+      - Getting started: dev/getting-started.md
+      - Architecture: dev/architecture.md
+      - Conventions: dev/conventions.md
+      - CI/CD: dev/ci-cd.md
+  - Extension developer guide: extensions/index.md
+  - Architecture decisions:
+      - adr/index.md
+      - adr/0001-monorepo.md
+      - adr/0002-rust-core-flutter-clients-single-api.md
